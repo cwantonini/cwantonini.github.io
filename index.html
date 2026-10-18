@@ -72,6 +72,13 @@ ul.plain li{margin-bottom:.55rem}
 .job{margin-bottom:1.75rem}
 .job p{margin:0}
 footer{padding:2.5rem 0 4rem;border-top:1px solid var(--rule);color:var(--muted);font-size:.9rem}
+.mailpick{position:relative;display:inline-block}
+.mailpick button.addr{font:inherit;color:var(--accent);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:.2em}
+.mailpick button.addr:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+.mailmenu{display:none;position:absolute;left:0;top:calc(100% + .4rem);z-index:5;min-width:13rem;background:var(--bg);border:1px solid var(--rule);border-radius:6px;padding:.35rem 0;list-style:none;margin:0;box-shadow:0 6px 20px rgba(22,33,46,.12)}
+.mailpick.open .mailmenu{display:block}
+.mailmenu a,.mailmenu button{display:block;width:100%;text-align:left;font:inherit;font-weight:500;font-size:.95rem;color:var(--ink);background:none;border:0;padding:.45rem .9rem;text-decoration:none;cursor:pointer}
+.mailmenu a:hover,.mailmenu button:hover,.mailmenu a:focus-visible,.mailmenu button:focus-visible{background:var(--accent-soft);color:var(--accent);outline:none}
 </style>
 </head>
 <body>
@@ -80,7 +87,15 @@ footer{padding:2.5rem 0 4rem;border-top:1px solid var(--rule);color:var(--muted)
 <header>
   <h1>Christopher<br>Antonini</h1>
   <ul class="links">
-    <li><a href="mailto:cwantonini@gmail.com">cwantonini@gmail.com</a></li>
+    <li><span class="mailpick">
+      <button type="button" class="addr" aria-haspopup="true" aria-expanded="false">cwantonini@gmail.com</button>
+      <span class="mailmenu" role="menu">
+        <a role="menuitem" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=cwantonini@gmail.com" target="_blank" rel="noopener">Open in Gmail</a>
+        <a role="menuitem" href="https://outlook.office.com/mail/deeplink/compose?to=cwantonini@gmail.com" target="_blank" rel="noopener">Open in Outlook</a>
+        <a role="menuitem" href="mailto:cwantonini@gmail.com">Open default mail app</a>
+        <button type="button" role="menuitem" class="copy">Copy address</button>
+      </span>
+    </span></li>
     <li><a href="https://credly.com/users/christopher-antonini.profile">Credly badges</a></li>
     <li><a href="https://learn.microsoft.com/api/credentials/share/en-gb/ChristopherAntonini-4552/F5F6185C6467E00A?sharingId=DC3BC6390AF747E5">Microsoft</a></li>
     <li><a href="https://tryhackme.com/p/Imbattibile">TryHackMe</a></li>
@@ -206,9 +221,35 @@ footer{padding:2.5rem 0 4rem;border-top:1px solid var(--rule);color:var(--muted)
 </section>
 
 <footer>
-  <p>Sydney, Australia. Australian citizen. Get in touch at <a href="mailto:cwantonini@gmail.com">cwantonini@gmail.com</a>.</p>
+  <p>Sydney, Australia. Australian citizen. Get in touch at <span class="mailpick">
+      <button type="button" class="addr" aria-haspopup="true" aria-expanded="false">cwantonini@gmail.com</button>
+      <span class="mailmenu" role="menu">
+        <a role="menuitem" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=cwantonini@gmail.com" target="_blank" rel="noopener">Open in Gmail</a>
+        <a role="menuitem" href="https://outlook.office.com/mail/deeplink/compose?to=cwantonini@gmail.com" target="_blank" rel="noopener">Open in Outlook</a>
+        <a role="menuitem" href="mailto:cwantonini@gmail.com">Open default mail app</a>
+        <button type="button" role="menuitem" class="copy">Copy address</button>
+      </span>
+    </span>.</p>
 </footer>
 
 </div>
+<script>
+document.querySelectorAll('.mailpick').forEach(function(w){
+  var btn=w.querySelector('.addr'), copy=w.querySelector('.copy');
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    var open=!w.classList.contains('open');
+    document.querySelectorAll('.mailpick.open').forEach(function(o){o.classList.remove('open');o.querySelector('.addr').setAttribute('aria-expanded','false');});
+    if(open){w.classList.add('open');btn.setAttribute('aria-expanded','true');w.querySelector('.mailmenu a').focus();}
+  });
+  copy.addEventListener('click',function(){
+    var done=function(){copy.textContent='Copied';setTimeout(function(){copy.textContent='Copy address';},1500);};
+    try{navigator.clipboard.writeText('cwantonini@gmail.com').then(done,done);}catch(e){done();}
+  });
+  w.querySelectorAll('.mailmenu a').forEach(function(l){l.addEventListener('click',function(){w.classList.remove('open');btn.setAttribute('aria-expanded','false');});});
+});
+document.addEventListener('click',function(){document.querySelectorAll('.mailpick.open').forEach(function(o){o.classList.remove('open');o.querySelector('.addr').setAttribute('aria-expanded','false');});});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){document.querySelectorAll('.mailpick.open').forEach(function(o){o.classList.remove('open');var b=o.querySelector('.addr');b.setAttribute('aria-expanded','false');b.focus();});}});
+</script>
 </body>
 </html>
