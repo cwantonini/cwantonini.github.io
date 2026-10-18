@@ -79,6 +79,20 @@ footer{padding:2.5rem 0 4rem;border-top:1px solid var(--rule);color:var(--muted)
 .mailpick.open .mailmenu{display:block}
 .mailmenu a,.mailmenu button{display:block;width:100%;text-align:left;font:inherit;font-weight:500;font-size:.95rem;color:var(--ink);background:none;border:0;padding:.45rem .9rem;text-decoration:none;cursor:pointer}
 .mailmenu a:hover,.mailmenu button:hover,.mailmenu a:focus-visible,.mailmenu button:focus-visible{background:var(--accent-soft);color:var(--accent);outline:none}
+.chain{list-style:none;margin:1.75rem 0 .5rem;padding:0;display:grid;grid-template-columns:repeat(5,1fr);gap:.5rem}
+.chain li{position:relative;border:1px solid var(--rule);border-radius:6px;padding:.7rem .75rem .75rem;font-size:.9rem;line-height:1.35}
+.chain li b{display:block;font-size:.78rem;font-weight:500;color:var(--threat);margin-bottom:.25rem}
+.chain li:not(:last-child)::after{content:"";position:absolute;right:-.42rem;top:50%;width:.5rem;height:.5rem;border-top:2px solid var(--rule);border-right:2px solid var(--rule);transform:translateY(-50%) rotate(45deg);background:var(--bg)}
+@media (max-width:640px){.chain{grid-template-columns:1fr}.chain li:not(:last-child)::after{right:auto;left:1rem;top:auto;bottom:-.42rem;transform:rotate(135deg)}}
+.attack{width:100%;border-collapse:collapse;margin:1rem 0 0;font-size:.95rem}
+.attack th,.attack td{text-align:left;padding:.55rem .6rem .55rem 0;border-bottom:1px solid var(--rule);vertical-align:top}
+.attack th{font-weight:700;font-size:.85rem;color:var(--muted)}
+.attack td:first-child{width:42%;padding-right:1rem}
+.attack code{white-space:nowrap}
+.attack code{font-family:var(--mono);font-size:.82rem;color:var(--accent)}
+.query{margin:1.5rem 0 0}
+.query pre{margin:.5rem 0;padding:.85rem 1rem;background:var(--accent-soft);border-radius:6px;overflow-x:auto;font-family:var(--mono);font-size:.8rem;line-height:1.55}
+.query p{margin:.4rem 0 0;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -108,6 +122,13 @@ footer{padding:2.5rem 0 4rem;border-top:1px solid var(--rule);color:var(--muted)
   <p>Initial containment involved blocking sign-in, revoking sessions and resetting the user's password. My further investigation revealed that the attacker had registered their own authenticator method and created an inbox rule to conceal correspondence with the CEO.</p>
   <p>These persistence mechanisms remained after a subsequent password reset and account re-enablement.</p>
   <p>I correlated Microsoft Entra sign-in logs, Microsoft Purview audit records and message trace results, and ran PowerShell commands built with AI assistance to query the account and mailbox. This let me reconstruct the incident, remove the attacker's persistence and report the exposure.</p>
+  <ol class="chain" aria-label="Attack chain">
+    <li><b>Lure</b>Fake Dropbox email relayed through another business's tenant</li>
+    <li><b>Session theft</b>Phishing page captures the sign-in and the session is replayed</li>
+    <li><b>Persistence</b>Own authenticator app and a rule hiding the CEO's emails</li>
+    <li><b>Reconnaissance</b>Three days reading payroll, HR and the contract thread</li>
+    <li><b>Impersonation</b>The CEO is sent a "voicemail" link from the user's account</li>
+  </ol>
   <h3>Key findings and outcomes</h3>
   <ul class="plain">
     <li>Identified an attacker-controlled authentication method that remained registered.</li>
@@ -130,10 +151,10 @@ footer{padding:2.5rem 0 4rem;border-top:1px solid var(--rule);color:var(--muted)
     <li class="group">Day 1</li>
     <li><time>12:17pm</time>
       <strong>Two "shared file" phishing emails arrive, the second a "Re:" follow-up 72 seconds later</strong>
-      <span class="d">Sent from a US server, then relayed and signed by a real business contact's Microsoft 365 tenant, so it passed SPF, DKIM and DMARC and was rated spam confidence level 1, meaning not spam. The sender name, "Dropbox Signature Notification", and the subject are padded with invisible characters to dodge filters, and the lure leads to a fake Microsoft 365 sign-in page.</span>
+      <span class="d">Sent from a US server, then relayed and signed by another business's Microsoft 365 tenant, so it passed SPF, DKIM and DMARC and was rated spam confidence level 1, meaning not spam. The sender name, "Dropbox Signature Notification", and the subject are padded with invisible characters to dodge filters, and the lure leads to a fake Microsoft 365 sign-in page.</span>
       <figure class="shot">
         <img src="phish-email.png" alt="The phishing email: a fake Dropbox Signature Notification saying a contract agreement PDF has been shared, with an Open document button. Sender, recipient, date and client name are redacted." loading="lazy" width="1478" height="668">
-        <figcaption>The lure, redacted. A fake Dropbox notification sharing a "contract agreement", sent from a real external contact's mailbox.</figcaption>
+        <figcaption>The lure, redacted. A fake Dropbox notification sharing a "contract agreement", sent from a real address at another business.</figcaption>
       </figure>
       <span class="tag">Initial access</span></li>
     <li><time>3:07pm</time>
@@ -218,6 +239,47 @@ footer{padding:2.5rem 0 4rem;border-top:1px solid var(--rule);color:var(--muted)
       <span class="found">Confirmed no one else received the lure or signed in from attacker infrastructure</span>
       <span class="found">Reported the accessed emails to the CEO</span></li>
   </ol>
+
+  <h3>MITRE ATT&amp;CK mapping</h3>
+  <table class="attack">
+    <thead><tr><th>Technique</th><th>What happened</th></tr></thead>
+    <tbody>
+      <tr><td><code>T1566.002</code> Spearphishing Link</td><td>Fake Dropbox "contract" email linking to a Microsoft 365 sign-in page</td></tr>
+      <tr><td><code>T1557</code> Adversary-in-the-Middle</td><td>Phishing page relayed the user's sign-in and captured the new password</td></tr>
+      <tr><td><code>T1550.004</code> Web Session Cookie</td><td>The user's session reappeared on the attacker's machine with MFA already satisfied</td></tr>
+      <tr><td><code>T1098.005</code> Device Registration</td><td>Attacker registered their own authenticator app on the account</td></tr>
+      <tr><td><code>T1564.008</code> Email Hiding Rules</td><td>Rule "ww" moved the CEO's emails to RSS Feeds and marked them read</td></tr>
+      <tr><td><code>T1114.002</code> Remote Email Collection</td><td>Payroll, HR, contract and client welfare emails read over three days</td></tr>
+      <tr><td><code>T1534</code> Internal Spearphishing</td><td>"Voicemail" link sent to the CEO from the user's real account</td></tr>
+      <tr><td><code>T1070.008</code> Clear Mailbox Data</td><td>Sent copy moved, soft-deleted and hard-deleted</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Queries I ran</h3>
+  <p class="muted">Sanitised. Addresses and dates are placeholders.</p>
+  <div class="query">
+    <strong>Find hidden inbox rules</strong>
+<pre>Get-InboxRule -Mailbox user@client.org -IncludeHidden |
+  Select-Object Name, Priority, From, MarkAsRead, MoveToFolder, StopProcessingRules</pre>
+    <p>Showed rule "ww": priority 1, mail from the CEO, mark as read, move to RSS Feeds, stop processing.</p>
+  </div>
+  <div class="query">
+    <strong>List the account's MFA methods</strong>
+<pre>Get-MgUserAuthenticationMethod -UserId user@client.org |
+  Select-Object Id, @{n='Type'; e={$_.AdditionalProperties.'@odata.type'}}</pre>
+    <p>Showed a software OATH token the user hadn't registered.</p>
+  </div>
+  <div class="query">
+    <strong>Pull mailbox access for the attacker's sessions</strong>
+<pre>Search-UnifiedAuditLog -StartDate 2026-10-08 -EndDate 2026-10-13 `
+  -UserIds user@client.org -Operations MailItemsAccessed -ResultSize 5000 |
+  Export-Csv mailitems.csv -NoTypeInformation</pre>
+    <p>Filtered by the attacker's session IDs to build the list of 130 accessed emails for the CEO.</p>
+  </div>
+
+  <h3>How I used AI</h3>
+  <p>I used Claude Opus 5.5 and Claude Sonnet 5.5 through our enterprise Microsoft 365 Copilot to suggest PowerShell commands and to review the logs I exported from Purview, Entra ID and message trace. It flagged the hidden inbox rule, the attacker's authenticator app, the deleted sent item and the invisible characters in the phishing email.</p>
+  <p>I treated its output as leads, not conclusions. I checked the error codes and session IDs in the raw sign-in logs, recovered the deleted email myself in Purview, and read the phishing email's headers directly.</p>
 </section>
 
 <footer>
