@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Christopher Antonini</title>
+<meta name="description" content="Christopher Antonini, IT support technician at a Sydney MSP moving into security. Microsoft 365 incident investigation, identity and Entra ID.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF2F5; --ink:#16212E; --muted:#56636F; --rule:#C9D2DA;
+  --accent:#0E6E6B; --threat:#B3263E; --threat-soft:#F7E3E7; --accent-soft:#DDEFEE;
+  --sans:"Schibsted Grotesk",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0F1720; --ink:#E4EAF0; --muted:#93A1AE; --rule:#2A3642;
+    --accent:#4FC1B9; --threat:#F07386; --threat-soft:#2A1A20; --accent-soft:#132B2B;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:1.0625rem;line-height:1.6}
+a{color:var(--accent);text-underline-offset:.2em}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+.wrap{max-width:46rem;margin:0 auto;padding:0 1rem}
+
+header{padding:4.5rem 0 3rem}
+h1{font-size:clamp(2.6rem,9vw,4.75rem);font-weight:900;line-height:.95;letter-spacing:-.03em;margin:0 0 1.5rem}
+.lede{font-size:1.25rem;line-height:1.5;max-width:34rem;margin:0 0 1.75rem}
+.links{display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;padding:0;margin:0;list-style:none;font-weight:500}
+
+section{padding:2.75rem 0;border-top:1px solid var(--rule)}
+h2{font-size:1.6rem;font-weight:700;letter-spacing:-.015em;line-height:1.2;margin:0 0 .75rem}
+h3{font-size:1.05rem;font-weight:700;margin:2rem 0 .5rem}
+p{margin:0 0 1rem}
+.muted{color:var(--muted)}
+
+/* Incident timeline: the one memorable element */
+.timeline{list-style:none;margin:2rem 0 0;padding:0;position:relative}
+.timeline::before{content:"";position:absolute;left:.4rem;top:.5rem;bottom:.5rem;width:2px;background:var(--rule)}
+.timeline li{position:relative;padding:0 0 1.6rem 2rem}
+.timeline li::before{content:"";position:absolute;left:0;top:.45rem;width:.8rem;height:.8rem;border-radius:50%;background:var(--bg);border:2px solid var(--threat)}
+.timeline li.defend::before{border-color:var(--accent)}
+.timeline li.mine::before{background:var(--accent);border-color:var(--accent)}
+.timeline time{font-family:var(--mono);font-size:.82rem;color:var(--muted)}
+.timeline strong{display:block;font-size:1.08rem;line-height:1.35;margin:.1rem 0 .2rem}
+.timeline span.d{display:block;color:var(--muted)}
+.missed{display:inline-block;font-size:.8rem;font-weight:500;color:var(--threat);background:var(--threat-soft);padding:.1rem .5rem;border-radius:3px;margin-top:.35rem}
+.found{display:inline-block;font-size:.8rem;font-weight:500;color:var(--accent);background:var(--accent-soft);padding:.1rem .5rem;border-radius:3px;margin-top:.35rem}
+.timeline li.group{padding:.4rem 0 .9rem 2rem;font-weight:700;font-size:.95rem}
+.timeline li.group::before{width:.8rem;height:2px;border:0;border-radius:0;background:var(--rule);top:.85rem}
+.tag{display:inline-block;font-size:.8rem;font-weight:500;color:var(--muted);border:1px solid var(--rule);padding:0 .5rem;border-radius:3px;margin-top:.35rem}
+.shot{margin:.75rem 0 .25rem}
+.shot img{display:block;width:100%;height:auto;border:1px solid var(--rule);border-radius:4px}
+.shot figcaption{font-size:.85rem;color:var(--muted);margin-top:.4rem}
+.legend{display:flex;flex-wrap:wrap;gap:.25rem 1.25rem;font-size:.9rem;color:var(--muted);margin:0}
+.legend span::before{content:"";display:inline-block;width:.6rem;height:.6rem;border-radius:50%;margin-right:.4rem;vertical-align:.05em;border:2px solid var(--threat)}
+.legend .l2::before{border-color:var(--accent)}
+.legend .l3::before{border-color:var(--accent);background:var(--accent)}
+
+ul.plain{padding-left:1.1rem;margin:0}
+ul.plain li{margin-bottom:.55rem}
+.tools{color:var(--muted);font-size:.95rem}
+
+.creds{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.25rem 2rem;padding:0;margin:0;list-style:none}
+.creds li{padding:.6rem 0;border-bottom:1px solid var(--rule)}
+.creds small{display:block;color:var(--muted);font-size:.85rem}
+
+.job{margin-bottom:1.75rem}
+.job p{margin:0}
+footer{padding:2.5rem 0 4rem;border-top:1px solid var(--rule);color:var(--muted);font-size:.9rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Christopher<br>Antonini</h1>
+  <ul class="links">
+    <li><a href="mailto:cwantonini@gmail.com">cwantonini@gmail.com</a></li>
+    <li><a href="https://credly.com/users/christopher-antonini.profile">Credly badges</a></li>
+    <li><a href="https://learn.microsoft.com/api/credentials/share/en-gb/ChristopherAntonini-4552/F5F6185C6467E00A?sharingId=DC3BC6390AF747E5">Microsoft</a></li>
+    <li><a href="https://tryhackme.com/p/Imbattibile">TryHackMe</a></li>
+  </ul>
+</header>
+
+<section aria-labelledby="case">
+  <h2 id="case">Case Study: Microsoft 365 Business Email Compromise</h2>
+  <p>A Microsoft 365 account was compromised through a phishing campaign impersonating Dropbox and presenting a fake Microsoft sign-in page.</p>
+  <p>Initial containment involved blocking sign-in, revoking sessions and resetting the user's password. My further investigation revealed that the attacker had registered their own authenticator method and created an inbox rule to conceal correspondence with the CEO.</p>
+  <p>These persistence mechanisms remained after a subsequent password reset and account re-enablement.</p>
+  <p>I correlated Microsoft Entra sign-in logs, Microsoft Purview audit records and message trace results, and ran PowerShell commands built with AI assistance to query the account and mailbox. This let me reconstruct the incident, remove the attacker's persistence and report the exposure.</p>
+  <h3>Key findings and outcomes</h3>
+  <ul class="plain">
+    <li>Identified an attacker-controlled authentication method that remained registered.</li>
+    <li>Found an inbox rule concealing the CEO's replies.</li>
+    <li>Confirmed token replay: the attacker reused the user's own session from a different machine two minutes after they signed in.</li>
+    <li>Reconstructed the attacker's activity across multiple days.</li>
+    <li>Recovered a deleted impersonation email using Purview.</li>
+    <li>Analysed the phishing email headers and identified two other businesses whose Microsoft 365 mail infrastructure the attacker was abusing to relay phishing, then organised reaching out to both.</li>
+    <li>Linked the phishing email to the attacker through its headers: the server that sent the lure later accessed the mailbox and sent the impersonation email.</li>
+    <li>Identified 130 accessed emails and reported the findings to the CEO.</li>
+    <li>Traced the original phishing email and searched the entire tenant for similar sender addresses and subject lines.</li>
+    <li>Confirmed across the tenant that no other user received the lure or signed in from attacker infrastructure.</li>
+  </ul>
+  <h3>Timeline</h3>
+  <p class="muted">Day 1 is the day the phishing email arrived. Times are local.</p>
+
+  <p class="legend" aria-hidden="true"><span>Attacker</span><span class="l2">User or initial response</span><span class="l3">My investigation</span></p>
+
+  <ol class="timeline">
+    <li class="group">Day 1</li>
+    <li><time>12:17pm</time>
+      <strong>Two "shared file" phishing emails arrive, the second a "Re:" follow-up 72 seconds later</strong>
+      <span class="d">Sent from a US server, then relayed and signed by a real business contact's Microsoft 365 tenant, so it passed SPF, DKIM and DMARC and was rated spam confidence level 1, meaning not spam. The sender name, "Dropbox Signature Notification", and the subject are padded with invisible characters to dodge filters, and the lure leads to a fake Microsoft 365 sign-in page.</span>
+      <figure class="shot">
+        <img src="phish-email.png" alt="The phishing email: a fake Dropbox Signature Notification saying a contract agreement PDF has been shared, with an Open document button. Sender, recipient, date and client name are redacted." loading="lazy" width="1478" height="668">
+        <figcaption>The lure, redacted. A fake Dropbox notification sharing a "contract agreement", sent from a real external contact's mailbox.</figcaption>
+      </figure>
+      <span class="tag">Initial access</span></li>
+    <li><time>3:07pm</time>
+      <strong>Wrong-password attempts from hosting and VPN infrastructure</strong>
+      <span class="d">Error 50126 from IPs in Sydney and Chicago, two minutes apart.</span></li>
+    <li class="defend"><time>5:20pm</time>
+      <strong>User's self-service password reset finishes</strong></li>
+    <li class="defend"><time>5:24pm</time>
+      <strong>User registers Microsoft Authenticator on their phone</strong>
+      <span class="d">Four minutes after the reset. This is the user's own, legitimate method.</span></li>
+    <li><time>5:32pm</time>
+      <strong>Sign-in from the attacker's Chicago IP gets error 50074</strong>
+      <span class="d">50074 means the password was correct and the sign-in stopped at the MFA step. A wrong password gives 50126, as at 3:07pm. So 12 minutes after the reset, the attacker already had the new password, captured through the phishing page.</span></li>
+    <li class="defend"><time>6:47pm</time>
+      <strong>User signs in on their phone, starting a new session</strong>
+      <span class="d">Session ID 0099d6ea…</span></li>
+    <li><time>6:49pm</time>
+      <strong>The same session appears on the attacker's Windows machine</strong>
+      <span class="d">Same session ID, now on Chrome for Windows from the attacker's Sydney IP. Token replay: the attacker reused the session the user had just created, so MFA was already satisfied. This is the first confirmed attacker access.</span>
+      <span class="tag">Initial access</span></li>
+    <li class="defend"><time>6:50pm</time>
+      <strong>User emails the CEO saying they can't open the "contract"</strong>
+      <span class="d">The document they were trying to open was the phishing lure.</span></li>
+    <li><time>6:51pm</time>
+      <strong>Attacker registers their own authenticator app</strong>
+      <span class="d">Two minutes after getting in. A software OATH token gives them a working second factor without the user's phone.</span>
+      <span class="tag">Persistence</span> <span class="missed">Survived containment</span></li>
+    <li><time>6:57pm</time>
+      <strong>Inbox rule "ww" hides the CEO's emails</strong>
+      <span class="d">Created seven minutes after the user emailed the CEO. A top-priority rule marks every email from the CEO as read, moves it to the RSS Feeds folder and stops any other rule from running. Any further warnings from the CEO would never reach the user.</span>
+      <span class="tag">Persistence</span> <span class="missed">Survived containment</span></li>
+
+    <li class="group">Days 1 to 2</li>
+    <li><time>Overnight</time>
+      <strong>Attacker returns to Outlook on the web three times</strong>
+      <span class="d">At 10:58pm, 3:04am and 8:50am, from the same Sydney IP.</span></li>
+
+    <li class="group">Days 3 to 5</li>
+    <li><time>Day 3, 8:51am</time>
+      <strong>Attacker moves to US infrastructure</strong>
+      <span class="d">New sessions from Albuquerque, Dallas, Philadelphia, Ashburn and Jacksonville. The Albuquerque IP is a rented server, the same one that sent the phishing email on Day 1.</span></li>
+    <li><time>Days 3 to 5</time>
+      <strong>About 425 background token requests for search and Copilot fail</strong>
+      <span class="d">Error 70044: the session had expired under the tenant's sign-in frequency policy. The attacker re-authenticated with their own authenticator app, which is what let them past that control.</span></li>
+    <li><time>Days 4 to 5</time>
+      <strong>Passes MFA with their authenticator app three times</strong>
+      <span class="d">Day 4 at 3:46pm, then Day 5 at 7:34am and 7:50am.</span></li>
+    <li><time>Day 4, from 3:47pm</time>
+      <strong>Reads the mailbox and keeps returning to the "contract" thread with the CEO</strong>
+      <span class="d">One minute after passing MFA. Payroll, pay reviews, HR, staff leave, the CEO's contract and client welfare correspondence.</span>
+      <span class="tag">Reconnaissance</span></li>
+    <li><time>Day 5, 10:10am</time>
+      <strong>Drafts a reply in the same "contract" thread</strong></li>
+    <li><time>Day 5, 10:11am</time>
+      <strong>Sends it to the CEO as the user</strong>
+      <span class="d">The attacker answered the CEO's "I never sent a contract" reply directly, using the user's real account and a genuine conversation to target the CEO next. The email asked the CEO to open a "voicemail" through a link.</span>
+      <span class="tag">Impersonation</span></li>
+    <li><time>Day 5, 10:36am</time>
+      <strong>Sent copy moved to Deleted Items, then hard-deleted</strong>
+      <span class="d">Moved, soft-deleted and hard-deleted in quick succession, so the user would never see it in Sent Items.</span>
+      <span class="tag">Covering tracks</span></li>
+    <li class="defend"><time>Day 5, shortly after</time>
+      <strong>The CEO reports the email to us</strong>
+      <span class="d">They flagged it as unexpected behaviour from the user. The attacker's second attempt at a phish, this time aimed at the CEO, was what exposed them.</span></li>
+    <li class="defend"><time>Day 5, 10:51am</time>
+      <strong>Sign-in blocked on the account</strong>
+      <span class="d">40 minutes after the impersonation email was sent.</span></li>
+    <li class="defend"><time>Day 5, 11:24 to 11:28am</time>
+      <strong>Sessions revoked and password reset</strong>
+      <span class="d">The attacker's authenticator app and inbox rule were still on the account.</span>
+      <span class="missed">Attacker still held a working second factor</span></li>
+
+    <li class="group">After day 5</li>
+    <li class="mine">
+      <strong>My follow-up investigation</strong>
+      <span class="d">Correlated Entra ID sign-in logs, Purview audit records and message trace, and ran PowerShell commands built with AI assistance to map the attack.</span>
+      <span class="found">Removed the attacker's authenticator and every other MFA method</span>
+      <span class="found">Removed the hidden inbox rule</span>
+      <span class="found">Recovered the deleted impersonation email in Purview</span>
+      <span class="found">Traced the original phish through message trace</span>
+      <span class="found">Identified two businesses whose Microsoft 365 mail flow was being abused to relay the phishing, and organised notifying them</span>
+      <span class="found">Confirmed no one else received the lure or signed in from attacker infrastructure</span>
+      <span class="found">Reported the accessed emails to the CEO</span></li>
+  </ol>
+</section>
+
+<footer>
+  <p>Sydney, Australia. Australian citizen. Get in touch at <a href="mailto:cwantonini@gmail.com">cwantonini@gmail.com</a>.</p>
+</footer>
+
+</div>
+</body>
+</html>
